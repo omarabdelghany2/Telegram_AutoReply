@@ -2,8 +2,10 @@
 from telegram.ext import *
 from keys import token
 from openpyxl import load_workbook
-
 import keys
+
+
+sun=load_workbook('empty.xlsx')
 
 print('Starting up bot...')
 
@@ -17,27 +19,8 @@ def start_command(update, context):
 def help_command(update, context):
     update.message.reply_text('I can help you if you want to inform about grades if a student Enter (/Grade : Omar mohamed abdelghany) like this form without brackets ')
 
-
 # Lets us use the /custom command
-def Grade_command(update, context):
-    
-
-    text = str(update.message.text).lower()
-    StudentName=text[text.find(':')+1:len(text)]
-    print(StudentName)
-
-    #now we got the name of student lets search for him in excel sheet
-    sheet = book.active
-    rows = sheet.rows
-    flag=False
-    for row in rows :
-        if(row[1].value==StudentName.lower()) :
-            grade= row[3].value
-            update.message.reply_text(str(grade))
-            flag=True
-            break
-    if(flag==False):        
-         update.message.reply_text('this name not found OR maybe u entered in wrong form enter /Grade : name')   
+  
 
     
    
@@ -48,7 +31,10 @@ def handle_response(text) -> str:
 
     if 'hello' in text:
         return 'Hey there!'
-
+    if 'هني'  in text:
+        return 'احا انت هتشتم علي فكرة هنيكك'
+    if 'كسمك'  in text:
+        return 'كسم اي ابن متناكة'      
     if 'how are you' in text:
         return 'I\'m good!'
 
@@ -83,8 +69,32 @@ def error(update, context):
 
 
 # Run the program
-if __name__ == '__main__':
-    book = load_workbook('ayman_data.xlsx')
+def Telegram_Start(Excelsheetname):
+    def Grade_command(update, context):
+        text = str(update.message.text).lower()
+        StudentName=text[text.find(':')+1:len(text)]
+        print(StudentName)
+
+        #now we got the name of student lets search for him in excel sheet
+        sheet = book.active
+        rows = sheet.rows
+        flag=False
+        for row in rows :
+            row[1].value
+            if(row[1].value==StudentName.lower()) :
+                grade= row[3].value
+                update.message.reply_text(str(grade))
+                flag=True
+                break
+        if(flag==False):        
+            update.message.reply_text('this name not found OR maybe u entered in wrong form enter /Grade : name') 
+
+
+
+
+
+    book = load_workbook(f"{Excelsheetname}.xlsx")
+    sun=book
     updater = Updater(keys.token, use_context=True)
     dp = updater.dispatcher
 
@@ -102,3 +112,5 @@ if __name__ == '__main__':
     # Run the bot
     updater.start_polling(1.0)
     updater.idle()
+
+    
